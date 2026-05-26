@@ -20,27 +20,51 @@ const ROLES = [
 
 const ITEMS = [
   {
-    id: "twitch", label: "TWITCH", handle: "@yourname", href: "https://twitch.tv/yourname", icon: "🎮", barIcon: icon1, bars: 1, newBars: [0], counts: ["56"],
-    links: ["twitch.tv/videos/2041837265"],
+    id: "linkedin",
+    label: "LINKEDIN",
+    handle: "@rhushikesh",
+    href: "https://www.linkedin.com/in/rhushikesh",
+    icon: "💼",
+    barIcon: icon1,
+    bars: 1,
+    newBars: [0],
+    counts: ["100% Active"],
+    links: ["linkedin.com/in/rhushikesh"],
     stats: [
-      { tag: "FOL", value: "1.2K", color: "#9147ff" },
-      { tag: "VWR", value: "042",  color: "#bf94ff" },
+      { tag: "CON", value: "500+", color: "#0077b5" },
+      { tag: "ACT", value: "HIGH", color: "#3ce2ff" },
     ],
   },
   {
-    id: "instagram", label: "INSTAGRAM", handle: "@yourhandle", href: "https://instagram.com/yourhandle", icon: "📷", barIcon: icon2, bars: 5, newBars: [1, 2], counts: ["3.4M", "2.5M", "676K", "412K", "198K"],
-    links: ["instagram.com/p/C4xQmRrNk2a", "instagram.com/p/C3wLpBsOj7f", "instagram.com/reel/C2vKoArMi6e", "instagram.com/p/C1uJnZqLh5d", "instagram.com/reel/C0tImYpKg4c"],
+    id: "github",
+    label: "GITHUB",
+    handle: "@rhushi-07",
+    href: "https://github.com/rhushi-07",
+    icon: "💻",
+    barIcon: icon2,
+    bars: 2,
+    newBars: [0],
+    counts: ["15 Repos", "99+ Commits"],
+    links: ["github.com/rhushi-07", "github.com/rhushi-07/P5-portfolio"],
     stats: [
-      { tag: "FOL", value: "3.4K", color: "#e1306c" },
-      { tag: "PST", value: "128",  color: "#f77737" },
+      { tag: "REP", value: "15", color: "#ffffff" },
+      { tag: "STR", value: "05", color: "#f9c63b" },
     ],
   },
   {
-    id: "tiktok", label: "TIKTOK", handle: "@yourhandle", href: "https://tiktok.com/@yourhandle", icon: "🎵", barIcon: icon3, bars: 7, newBars: [0, 3, 5, 6], counts: ["5.1M", "3.7M", "2.2M", "1.4M", "831K", "490K", "217K"],
-    links: ["tiktok.com/@yourhandle/video/7318492016374859054", "tiktok.com/@yourhandle/video/7305837261940183342", "tiktok.com/@yourhandle/video/7291046385720348974", "tiktok.com/@yourhandle/video/7278392047163820334", "tiktok.com/@yourhandle/video/7264819203847165742", "tiktok.com/@yourhandle/video/7251047382916430126", "tiktok.com/@yourhandle/video/7237294018463851822"],
+    id: "contact",
+    label: "CONTACT ME",
+    handle: "12rhushikeshgulve@gmail.com",
+    href: "mailto:12rhushikeshgulve@gmail.com",
+    icon: "✉️",
+    barIcon: icon3,
+    bars: 2,
+    newBars: [0, 1],
+    counts: ["Email", "Call/SMS"],
+    links: ["12rhushikeshgulve@gmail.com", "+91 9119534410"],
     stats: [
-      { tag: "FOL", value: "8.9K", color: "#00f2ea" },
-      { tag: "LKS", value: "52K",  color: "#ff0050" },
+      { tag: "EML", value: "ACTIVE", color: "#d44638" },
+      { tag: "LOC", value: "PUNE", color: "#25d366" },
     ],
   },
 ];
@@ -54,6 +78,16 @@ export default function Socials() {
 
   const isMobileViewport =
     typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
+  const openSubLink = (url) => {
+    if (url.includes("@")) {
+      window.open(`mailto:${url}`, "_blank");
+    } else if (url.startsWith("+")) {
+      window.open(`tel:${url.replace(/\s+/g, "")}`, "_blank");
+    } else {
+      window.open("https://" + url, "_blank");
+    }
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 60);
@@ -72,13 +106,13 @@ export default function Socials() {
         if (e.key === "ArrowUp")   setActiveInfoBar(i => Math.max(0, i - 1));
         if (e.key === "ArrowDown") setActiveInfoBar(i => Math.min(barCount - 1, i + 1));
         if (e.key === "ArrowLeft") setFocus("left");
-        if (e.key === "Enter")     window.open("https://" + ITEMS[active].links[activeInfoBar], "_blank");
+        if (e.key === "Enter")     openSubLink(ITEMS[active].links[activeInfoBar]);
       }
       if ((e.key === "ArrowLeft" && focus === "left") || e.key === "Escape" || e.key === "Backspace") navigate(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, navigate, focus]);
+  }, [active, navigate, focus, activeInfoBar]);
 
   return (
     <div id="menu-screen">
@@ -664,7 +698,7 @@ export default function Socials() {
               style={{ animationDelay: `${i * 50}ms` }}
               onClick={() => {
                 if (isMobileViewport || activeInfoBar === i) {
-                  window.open("https://" + ITEMS[active].links[i], "_blank");
+                  openSubLink(ITEMS[active].links[i]);
                   return;
                 }
                 setActiveInfoBar(i);
@@ -676,8 +710,10 @@ export default function Socials() {
               )}
               <div className="sc-info-bar">
                 <img className="sc-info-bar-icon" src={ITEMS[active].barIcon} alt="" />
-                <span className="sc-info-bar-text">{ITEMS[active].links[i].slice(0, 10)}...</span>
-                <span className="sc-info-bar-box">VIEWS</span>
+                <span className="sc-info-bar-text">
+                  {ITEMS[active].links[i].length > 24 ? ITEMS[active].links[i].slice(0, 22) + "..." : ITEMS[active].links[i]}
+                </span>
+                <span className="sc-info-bar-box">LINK</span>
                 <span className="sc-info-bar-count">{ITEMS[active].counts[i]}</span>
               </div>
             </div>

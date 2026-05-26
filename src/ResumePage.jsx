@@ -1,23 +1,79 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const ITEMS = [
-  { id: "i", badge: "I", title: "EDUCATION", subtitle: "University / Coursework", rank: 3 },
-  { id: "ii", badge: "II", title: "SKILLS", subtitle: "Frontend / Design / UI", rank: 4 },
-  { id: "iii", badge: "III", title: "PROJECTS", subtitle: "Featured Work", rank: 5 },
-  { id: "iv", badge: "IV", title: "EXPERIENCE", subtitle: "Internships / Roles", rank: 2 },
+  { id: "i", badge: "I", title: "EDUCATION", subtitle: "B.E. Computer Engineering", rank: 3 },
+  { id: "ii", badge: "II", title: "SKILLS", subtitle: "SQL / Unity / C++ / Python", rank: 4 },
+  { id: "iii", badge: "III", title: "PROJECTS", subtitle: "ML, GameDev & AI Models", rank: 5 },
+  { id: "iv", badge: "IV", title: "EXPERIENCE", subtitle: "LSOYS / Trainee / Hackathons", rank: 2 },
 ];
 
-const EDUCATION_ROWS = [
-  { index: "01", title: "General Education", status: "Complete" },
-  { index: "02", title: "Computer Science Core", status: "In Progress" },
-  { index: "03", title: "Elective Track", status: "Queued" },
-  { index: "04", title: "Capstone Prep", status: "Pending" },
+const DETAIL_PANELS = [
+  {
+    title: "EDUCATION LOG",
+    progress: "7.95 GPA",
+    rows: [
+      { index: "01", title: "Computer Engineering", status: "Complete" },
+      { index: "02", title: "Siddhant College Eng.", status: "7.95 CGPA" },
+      { index: "03", title: "SPPU University", status: "Pune, IN" },
+      { index: "04", title: "B.E. Degree", status: "2021-2025" }
+    ],
+    bullets: [
+      "- Strong foundation in software engineering, OOP, and databases.",
+      "- Focused on problem-solving, UI design, and systems optimization.",
+      "- Passionate about gaming architectures and data analysis."
+    ]
+  },
+  {
+    title: "TECHNICAL SKILLS",
+    progress: "LEVEL S",
+    rows: [
+      { index: "01", title: "SQL & Databases", status: "Expert" },
+      { index: "02", title: "GameDev (Unity & C#)", status: "Advanced" },
+      { index: "03", title: "C++, C#, Python", status: "Skilled" },
+      { index: "04", title: "Git, JIRA, VS, Blender", status: "Tools" }
+    ],
+    bullets: [
+      "- SQL: CRUD, Joins, Triggers, Views, Functions, Indexing, Procedures, TCL/DCL.",
+      "- Game Development: Unity, C#, 2D games, physics, UI, AI state machines.",
+      "- Soft Skills: Technical documentation, problem-solving, communication & leadership."
+    ]
+  },
+  {
+    title: "FEATURED WORK",
+    progress: "3 ACTIVE",
+    rows: [
+      { index: "01", title: "Asteroid Path Model", status: "Patent App" },
+      { index: "02", title: "Kyūen (2D Roguelike)", status: "Unity / C#" },
+      { index: "03", title: "Techathon AI Teacher", status: "Django / LLM" }
+    ],
+    bullets: [
+      "- Asteroid: Hybrid trajectory prediction combining statistics & ML with ensemble simulation.",
+      "- Kyūen: Skewed-action roguelike, state AI, parallax effects, resource upgrades.",
+      "- Techathon: Offline voice-to-voice educational assistant returning visual answers."
+    ]
+  },
+  {
+    title: "EXPERIENCE LOG",
+    progress: "ACTIVE",
+    rows: [
+      { index: "01", title: "LSOYS Gaming (Game Intern)", status: "Jan-Apr 24" },
+      { index: "02", title: "QSpiders (Data Trainee)", status: "Sep 24-Pres" },
+      { index: "03", title: "Codement24 AR & AI", status: "Hackathon" }
+    ],
+    bullets: [
+      "- LSOYS: Built Balloon Runner gameplay, dynamic health system & interactive zones.",
+      "- Codement24: Developed Unity AR educational application and AI student assistant.",
+      "- QSpiders: Full stack python developer trainee analyzing & visualizing data."
+    ]
+  }
 ];
 
 export default function ResumePage({ src }) {
   const navigate = useNavigate();
-  const [active, setActive] = useState(1);
+  const location = useLocation();
+  const initialActive = location.state?.activeTab !== undefined ? location.state.activeTab : 1;
+  const [active, setActive] = useState(initialActive);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -435,16 +491,16 @@ export default function ResumePage({ src }) {
           ))}
         </div>
 
-        {active === 0 && (
-          <div className="resume-detail-panel">
+        {DETAIL_PANELS[active] && (
+          <div className="resume-detail-panel" key={active}>
             <div className="resume-detail-top">
-              <div className="resume-detail-top-index">01</div>
-              <div className="resume-detail-top-title">EDUCATION LOG</div>
-              <div className="resume-detail-top-progress">7/5</div>
+              <div className="resume-detail-top-index">0{active + 1}</div>
+              <div className="resume-detail-top-title">{DETAIL_PANELS[active].title}</div>
+              <div className="resume-detail-top-progress">{DETAIL_PANELS[active].progress}</div>
             </div>
 
             <div className="resume-detail-list">
-              {EDUCATION_ROWS.map((row) => (
+              {DETAIL_PANELS[active].rows.map((row) => (
                 <div className="resume-detail-row" key={row.index}>
                   <div className="resume-detail-row-index">{row.index}</div>
                   <div className="resume-detail-row-title">{row.title}</div>
@@ -456,9 +512,15 @@ export default function ResumePage({ src }) {
             <div className="resume-detail-bottom">
               <div className="resume-detail-bottom-title">DETAILS</div>
               <div className="resume-detail-bullets">
-                <div className="resume-detail-bullet">- Maintain progress across required classes and supporting work.</div>
-                <div className="resume-detail-bullet">- Track portfolio-ready projects tied to coursework and labs.</div>
-                <div className="resume-detail-bullet">- Keep materials prepared for internships, research, and review.</div>
+                {DETAIL_PANELS[active].bullets.map((bullet, idx) => (
+                  <div className="resume-detail-bullet" key={idx}>{bullet}</div>
+                ))}
+              </div>
+              <div className="resume-detail-bottom-title" style={{ marginTop: "16px", fontSize: "18px", borderTop: "1px dashed rgba(145,239,255,0.2)", paddingTop: "8px" }}>
+                DECLARATION
+              </div>
+              <div className="resume-detail-bullet" style={{ fontSize: "14px", fontStyle: "italic", opacity: 0.8, color: "#9ffbff", paddingLeft: "4px" }}>
+                "I hereby declare that the information provided is true and correct to the best of my knowledge and belief."
               </div>
             </div>
           </div>

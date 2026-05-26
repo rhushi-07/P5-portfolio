@@ -16,62 +16,66 @@ const MAIN_IMAGES = [mainm, mainm2, mainf];
 
 const REVEAL_CONTENT = [
   {
-    upper: ["name moneybagg", "age:23"],
-    lower: "major: computer science",
+    upper: [
+      "Rhushikesh Gulave",
+      "SPPU Bachelor of Engineering in Computer Engineering (CGPA: 7.95)",
+      "Siddhant College Engineering, Sudumbare, Pune 2021 - 2025"
+    ],
+    lower: "passionate software developer skilled in c++, c#, sql, python, and ui optimization.",
   },
   {
     upper: [
-      "Cleopatra lived closer to the Moon landing than to the building of the pyramids.",
-      "Vikings kept cats on ships for pest control (and vibes).",
-      "In medieval Europe, animals could be put on trial for crimes",
+      "Designed & built Kyūen, a fast-paced 2D Roguelike using Unity and C#",
+      "Created core game mechanics, custom balloon health, and physics in Balloon Runner",
+      "Implemented state-machine based enemy AI systems and responsive game UIs"
     ],
-    lower: "abbove is some history fun fact",
+    lower: "game development is a creative pursuit combining game mechanics, mathematics, and design.",
   },
   {
     upper: [
-      "Oxford University founding is older than the Aztec Empire.",
-      "The shortest war in history lasted 38–45 minutes (Britain vs Zanzibar).",
-      "Humans have been writing for ~5,000 years",
+      "Hybrid Asteroid Path Prediction: Combined statistics & machine learning for trajectory accuracy (Patent Applied)",
+      "Techathon 2024: Built offline AI Teacher utilizing Django, APIs, and voice-to-voice interfaces",
+      "Codement24: Implemented Unity AR and LLMs for interactive educational applications"
     ],
-    lower: "yes it's a place holder",
+    lower: "focused on combining machine learning, robust web backends, and spatial computing to solve complex problems.",
   },
 ];
 
 const ROLES = [
   { text: "LEADER", color: "#e8c100", bg: "rgba(232,193,0,0.12)", border: "rgba(232,193,0,0.5)" },
-  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
-  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
+  { text: "PARTY", color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
+  { text: "PARTY", color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
 ];
 
 const ITEMS = [
   {
-    id: "twitch", label: "ABOUT ME", handle: "@yourname", href: "https://twitch.tv/yourname", icon: "🎮", barIcon: icon1, bars: 1, newBars: [0], counts: ["56"],
-    links: ["twitch.tv/videos/2041837265"],
+    id: "about", label: "ABOUT ME", handle: "@rhushi-07", href: "https://github.com/rhushi-07", icon: "🎮", barIcon: icon1, bars: 1, newBars: [0], counts: ["BE CE"],
+    links: ["github.com/rhushi-07"],
     stats: [
-      { tag: "FOL", value: "1.2K", color: "#9147ff" },
-      { tag: "VWR", value: "042",  color: "#bf94ff" },
+      { tag: "GPA", value: "7.95", color: "#e8c100" },
+      { tag: "YRS", value: "21-25", color: "#4a8fff" },
     ],
   },
   {
-    id: "instagram", label: "FUN FACT ABOUT ME", handle: "@yourhandle", href: "https://instagram.com/yourhandle", icon: "📷", barIcon: icon2, bars: 5, newBars: [1, 2], counts: ["3.4M", "2.5M", "676K", "412K", "198K"],
-    links: ["instagram.com/p/C4xQmRrNk2a", "instagram.com/p/C3wLpBsOj7f", "instagram.com/reel/C2vKoArMi6e", "instagram.com/p/C1uJnZqLh5d", "instagram.com/reel/C0tImYpKg4c"],
+    id: "gamedev", label: "GAME DEV PASSION", handle: "@rhushikesh", href: "https://github.com/rhushi-07", icon: "🕹️", barIcon: icon2, bars: 2, newBars: [0], counts: ["Kyūen", "Balloon Runner"],
+    links: ["github.com/rhushi-07", "github.com/rhushi-07"],
     stats: [
-      { tag: "FOL", value: "3.4K", color: "#e1306c" },
-      { tag: "PST", value: "128",  color: "#f77737" },
+      { tag: "ENG", value: "Unity", color: "#ffffff" },
+      { tag: "LAN", value: "C#", color: "#178600" },
     ],
   },
   {
-    id: "tiktok", label: "WIRED FACT ABOUT ME", handle: "@yourhandle", href: "https://tiktok.com/@yourhandle", icon: "🎵", barIcon: icon3, bars: 7, newBars: [0, 3, 5, 6], counts: ["5.1M", "3.7M", "2.2M", "1.4M", "831K", "490K", "217K"],
-    links: ["tiktok.com/@yourhandle/video/7318492016374859054", "tiktok.com/@yourhandle/video/7305837261940183342", "tiktok.com/@yourhandle/video/7291046385720348974", "tiktok.com/@yourhandle/video/7278392047163820334", "tiktok.com/@yourhandle/video/7264819203847165742", "tiktok.com/@yourhandle/video/7251047382916430126", "tiktok.com/@yourhandle/video/7237294018463851822"],
+    id: "research", label: "RESEARCH & AI", handle: "@rhushikesh", href: "https://github.com/rhushi-07", icon: "☄️", barIcon: icon3, bars: 2, newBars: [1], counts: ["Asteroid ML", "Offline AI"],
+    links: ["github.com/rhushi-07", "github.com/rhushi-07"],
     stats: [
-      { tag: "FOL", value: "8.9K", color: "#00f2ea" },
-      { tag: "LKS", value: "52K",  color: "#ff0050" },
+      { tag: "PAT", value: "PEND", color: "#ff5e88" },
+      { tag: "LAN", value: "Python", color: "#3572A5" },
     ],
   },
 ];
 
 export default function AboutMe() {
-  const [active, setActive]   = useState(0);
+  const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const navigate = useNavigate();
@@ -80,15 +84,13 @@ export default function AboutMe() {
     typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
 
   const handleBarClick = (index) => {
-    if (isMobileViewport && active === index) {
+    if (active === index) {
       setRevealed((prev) => !prev);
       return;
     }
 
     setActive(index);
-    if (isMobileViewport) {
-      setRevealed(false);
-    }
+    setRevealed(true);
   };
 
   useEffect(() => {
@@ -278,8 +280,8 @@ export default function AboutMe() {
         .sc-reveal-upper-bar {
           position: absolute;
           top: 10%;
-          left: 0%;
-          width: 100%;
+          left: 32%;
+          width: 78%;
           height: 40%;
           background: rgba(0, 0, 0, 0.92);
           clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
@@ -291,19 +293,20 @@ export default function AboutMe() {
           gap: 10px;
           color: #fff;
           text-align: center;
+          padding: 0 40% 0 20px;
         }
         .sc-reveal-upper-line {
           font-family: 'Montserrat', sans-serif;
           font-weight: 300;
-          font-size: 20px;
+          font-size: 15px;
           letter-spacing: 0.5px;
-          line-height: 1.15;
+          line-height: 1.25;
         }
         .sc-reveal-lower-bar {
           position: absolute;
           top: 58%;
-          right: 0;
-          width: 48%;
+          left: 32%;
+          width: 78%;
           min-height: 20%;
           max-height: 34%;
           background: rgba(0, 0, 0, 0.92);
@@ -315,13 +318,13 @@ export default function AboutMe() {
           color: #fff;
           font-family: 'Montserrat', sans-serif;
           font-weight: 300;
-          font-size: 22px;
-          line-height: 1.18;
+          font-size: 16px;
+          line-height: 1.25;
           letter-spacing: 0.4px;
           text-transform: lowercase;
           white-space: normal;
           overflow-y: auto;
-          padding: 10px 18px 10px 22px;
+          padding: 10px 40% 10px 24px;
         }
 
         @keyframes sc-right-nav-pop {
@@ -706,6 +709,7 @@ export default function AboutMe() {
 
           .sc-reveal-lower-bar {
             top: 62%;
+            left: 6%;
             width: 88%;
             bottom: 8%;
             height: auto;

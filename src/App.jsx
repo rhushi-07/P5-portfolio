@@ -18,7 +18,15 @@ function MenuScreen() {
   return (
     <div id="menu-screen">
       <video src={menuVideo} autoPlay loop muted playsInline />
-      <P3Menu onNavigate={(page) => navigate(`/${page}`)} />
+      <P3Menu onNavigate={(page) => {
+        if (page === "github") {
+          window.open("https://github.com/rhushi-07", "_blank");
+        } else if (page === "sideproj") {
+          navigate("/resume", { state: { activeTab: 2 } });
+        } else {
+          navigate(`/${page}`);
+        }
+      }} />
     </div>
   )
 }
