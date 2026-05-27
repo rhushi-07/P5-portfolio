@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import char1 from "./assets/char1.png";
+import char1 from "./assets/char4.png";
 import char2 from "./assets/char2.png";
 import char3 from "./assets/char3.png";
 import bgVideo from "./assets/main1.mp4";
 import icon1 from "./assets/icon1.png";
 import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
-import mainm from "./assets/mainm.jpeg";
-import mainm2 from "./assets/mainm2.jpeg";
-import mainf from "./assets/mainf.jpeg";
+import mainm from "./assets/j2.jpeg";
+import mainm2 from "./assets/mainf.jpeg";
+import mainf from "./assets/nasa3.jpeg";
 
 const CHARS = [char1, char2, char3];
 const MAIN_IMAGES = [mainm, mainm2, mainf];
@@ -95,15 +95,23 @@ export default function AboutMe() {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "ArrowUp") setActive(i => Math.max(0, i - 1));
+      if (e.key === "ArrowUp") setActive(i => Math.max(-1, i - 1));
       if (e.key === "ArrowDown") setActive(i => Math.min(ITEMS.length - 1, i + 1));
-      if (e.key === "Enter") setRevealed(true);
-      if (e.key === "ArrowRight") setRevealed(true);
+      if (e.key === "Enter") {
+        if (active === -1) {
+          navigate("/");
+        } else {
+          setRevealed(true);
+        }
+      }
+      if (e.key === "ArrowRight") {
+        if (active !== -1) setRevealed(true);
+      }
       if (e.key === "ArrowLeft") {
         if (revealed) setRevealed(false);
-        else navigate(-1);
+        else navigate("/");
       }
-      if (e.key === "Escape" || e.key === "Backspace") navigate(-1);
+      if (e.key === "Escape" || e.key === "Backspace") navigate("/");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -112,20 +120,30 @@ export default function AboutMe() {
   return (
     <div id="menu-screen">
       <video src={bgVideo} autoPlay loop muted playsInline />
+      <a
+        href="#"
+        className={`p3-home-btn${active === -1 ? " active" : ""}`}
+        onClick={(e) => { e.preventDefault(); navigate("/"); }}
+        onMouseEnter={() => setActive(-1)}
+      >
+        <div className="p3-home-btn-shadow" />
+        <div className="p3-home-btn-bg" />
+        <span className="p3-home-btn-text">◄ MENU</span>
+      </a>
       {revealed && <div key={`dim-${active}`} className="sc-dim" onClick={() => setRevealed(false)} />}
       {revealed && (
-        <div key={`panel-${active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`}>
+        <div key={`panel-${active === -1 ? 0 : active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`}>
           <div className="sc-reveal-upper-bar">
-            {REVEAL_CONTENT[active].upper.map((line) => (
+            {REVEAL_CONTENT[active === -1 ? 0 : active].upper.map((line) => (
               <div className="sc-reveal-upper-line" key={line}>{line}</div>
             ))}
           </div>
-          <div className="sc-reveal-lower-bar">{REVEAL_CONTENT[active].lower}</div>
+          <div className="sc-reveal-lower-bar">{REVEAL_CONTENT[active === -1 ? 0 : active].lower}</div>
           <button className="sc-close-btn" type="button" onClick={() => setRevealed(false)}>BACK</button>
         </div>
       )}
       {revealed && (
-        <div key={`nav-${active}`} className="sc-right-nav">
+        <div key={`nav-${active === -1 ? 0 : active}`} className="sc-right-nav">
           <span className="sc-nav-arrow left">◄</span>
           <span className="sc-nav-btn">LB</span>
           <span className="sc-nav-dot" />
@@ -134,16 +152,74 @@ export default function AboutMe() {
         </div>
       )}
       {revealed && (
-        <div key={`portrait-${active}`} className={`sc-main-portrait-shell${mounted ? " mounted" : ""}`}>
+        <div key={`portrait-${active === -1 ? 0 : active}`} className={`sc-main-portrait-shell${mounted ? " mounted" : ""}`}>
           <img
             className="sc-main-portrait"
-            src={MAIN_IMAGES[active]}
+            src={MAIN_IMAGES[active === -1 ? 0 : active]}
             alt=""
           />
         </div>
       )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&family=Montserrat:wght@300&display=swap');
+
+        .p3-home-btn {
+          position: absolute;
+          top: 20px;
+          left: 24px;
+          z-index: 100;
+          cursor: pointer;
+          pointer-events: all;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 20px;
+          font-style: italic;
+          letter-spacing: 2px;
+          padding: 8px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: #3ce2ff;
+          transition: transform 0.2s ease, color 0.12s ease;
+          transform: skewX(-15deg);
+        }
+        .p3-home-btn-shadow {
+          position: absolute;
+          inset: 0;
+          background: rgba(235, 80, 120, 0.85);
+          z-index: 1;
+          transform: translate(-4px, 4px);
+          transition: transform 0.2s ease, opacity 0.2s ease;
+          opacity: 0;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+        .p3-home-btn-bg {
+          position: absolute;
+          inset: 0;
+          background: #111;
+          z-index: 2;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .p3-home-btn-text {
+          position: relative;
+          z-index: 3;
+          white-space: nowrap;
+          user-select: none;
+        }
+        .p3-home-btn:hover, .p3-home-btn.active {
+          color: #6b0010;
+          transform: skewX(-15deg) scale(1.05);
+        }
+        .p3-home-btn:hover .p3-home-btn-shadow, .p3-home-btn.active .p3-home-btn-shadow {
+          opacity: 1;
+          transform: translate(-8px, 6px);
+        }
+        .p3-home-btn:hover .p3-home-btn-bg, .p3-home-btn.active .p3-home-btn-bg {
+          background: #ffffff;
+          border-color: #ffffff;
+        }
 
         .sc-root {
           position: absolute;
@@ -617,7 +693,7 @@ export default function AboutMe() {
         .sc-char {
           position: absolute;
           top: 0;
-          left: 110px;
+          left: 25%;
           height: 100%;
           width: auto;
           max-width: 160px;
@@ -625,7 +701,6 @@ export default function AboutMe() {
           object-position: top;
           pointer-events: none;
           z-index: 3;
-          clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
         }
 
         /* footer hints */

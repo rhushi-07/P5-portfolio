@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char1.png";
+import char4 from "./assets/char4.png";
 import char2 from "./assets/char2.png";
 import char3 from "./assets/char3.png";
 import bgVideo from "./assets/main3.mp4";
@@ -10,13 +11,13 @@ import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
 
 
-const CHARS = [char1, char2, char3, char1];
+const CHARS = [char4, char2, char3, char1];
 
 const ROLES = [
   { text: "LEADER", color: "#e8c100", bg: "rgba(232,193,0,0.12)", border: "rgba(232,193,0,0.5)" },
-  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
-  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
-  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
+  { text: "PARTY", color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
+  { text: "PARTY", color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
+  { text: "PARTY", color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
 ];
 
 const ITEMS = [
@@ -25,7 +26,7 @@ const ITEMS = [
     label: "LINKEDIN",
     handle: "@rhushikesh",
     href: "https://www.linkedin.com/in/rhushikesh",
-    icon: "💼",
+    icon: "",
     barIcon: icon1,
     bars: 1,
     newBars: [0],
@@ -41,7 +42,7 @@ const ITEMS = [
     label: "GITHUB",
     handle: "@rhushi-07",
     href: "https://github.com/rhushi-07",
-    icon: "💻",
+    icon: "",
     barIcon: icon2,
     bars: 2,
     newBars: [0],
@@ -57,7 +58,7 @@ const ITEMS = [
     label: "YOUTUBE",
     handle: "@PyreStudios",
     href: "https://www.youtube.com/@PyreStudios",
-    icon: "📺",
+    icon: "",
     barIcon: icon1,
     bars: 2,
     newBars: [0],
@@ -73,7 +74,7 @@ const ITEMS = [
     label: "CONTACT ME",
     handle: "12rhushikeshgulve@gmail.com",
     href: "mailto:12rhushikeshgulve@gmail.com",
-    icon: "✉️",
+    icon: "",
     barIcon: icon3,
     bars: 2,
     newBars: [0, 1],
@@ -87,10 +88,10 @@ const ITEMS = [
 ];
 
 export default function Socials() {
-  const [active, setActive]               = useState(0);
-  const [mounted, setMounted]             = useState(false);
+  const [active, setActive] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const [activeInfoBar, setActiveInfoBar] = useState(0);
-  const [focus, setFocus]                 = useState("left"); // "left" | "right"
+  const [focus, setFocus] = useState("left"); // "left" | "right"
   const navigate = useNavigate();
 
   const isMobileViewport =
@@ -114,18 +115,29 @@ export default function Socials() {
   useEffect(() => {
     const onKey = (e) => {
       if (focus === "left") {
-        if (e.key === "ArrowUp")    setActive(i => Math.max(0, i - 1));
-        if (e.key === "ArrowDown")  setActive(i => Math.min(ITEMS.length - 1, i + 1));
-        if (e.key === "ArrowRight") { setFocus("right"); setActiveInfoBar(0); }
-        if (e.key === "Enter")      window.open(ITEMS[active].href, "_blank");
+        if (e.key === "ArrowUp") setActive(i => Math.max(-1, i - 1));
+        if (e.key === "ArrowDown") setActive(i => Math.min(ITEMS.length - 1, i + 1));
+        if (e.key === "ArrowRight") {
+          if (active !== -1) {
+            setFocus("right");
+            setActiveInfoBar(0);
+          }
+        }
+        if (e.key === "Enter") {
+          if (active === -1) {
+            navigate("/");
+          } else {
+            window.open(ITEMS[active].href, "_blank");
+          }
+        }
       } else {
         const barCount = ITEMS[active].bars;
-        if (e.key === "ArrowUp")   setActiveInfoBar(i => Math.max(0, i - 1));
+        if (e.key === "ArrowUp") setActiveInfoBar(i => Math.max(0, i - 1));
         if (e.key === "ArrowDown") setActiveInfoBar(i => Math.min(barCount - 1, i + 1));
         if (e.key === "ArrowLeft") setFocus("left");
-        if (e.key === "Enter")     openSubLink(ITEMS[active].links[activeInfoBar]);
+        if (e.key === "Enter") openSubLink(ITEMS[active].links[activeInfoBar]);
       }
-      if ((e.key === "ArrowLeft" && focus === "left") || e.key === "Escape" || e.key === "Backspace") navigate(-1);
+      if (((e.key === "ArrowLeft" && focus === "left") || e.key === "Escape" || e.key === "Backspace")) navigate("/");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -134,8 +146,76 @@ export default function Socials() {
   return (
     <div id="menu-screen">
       <video src={bgVideo} autoPlay loop muted playsInline />
+      <a
+        href="#"
+        className={`p3-home-btn${active === -1 ? " active" : ""}`}
+        onClick={(e) => { e.preventDefault(); navigate("/"); }}
+        onMouseEnter={() => setActive(-1)}
+      >
+        <div className="p3-home-btn-shadow" />
+        <div className="p3-home-btn-bg" />
+        <span className="p3-home-btn-text">◄ MENU</span>
+      </a>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&display=swap');
+
+        .p3-home-btn {
+          position: absolute;
+          top: 20px;
+          left: 24px;
+          z-index: 100;
+          cursor: pointer;
+          pointer-events: all;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 20px;
+          font-style: italic;
+          letter-spacing: 2px;
+          padding: 8px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: #3ce2ff;
+          transition: transform 0.2s ease, color 0.12s ease;
+          transform: skewX(-15deg);
+        }
+        .p3-home-btn-shadow {
+          position: absolute;
+          inset: 0;
+          background: rgba(235, 80, 120, 0.85);
+          z-index: 1;
+          transform: translate(-4px, 4px);
+          transition: transform 0.2s ease, opacity 0.2s ease;
+          opacity: 0;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+        .p3-home-btn-bg {
+          position: absolute;
+          inset: 0;
+          background: #111;
+          z-index: 2;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .p3-home-btn-text {
+          position: relative;
+          z-index: 3;
+          white-space: nowrap;
+          user-select: none;
+        }
+        .p3-home-btn:hover, .p3-home-btn.active {
+          color: #6b0010;
+          transform: skewX(-15deg) scale(1.05);
+        }
+        .p3-home-btn:hover .p3-home-btn-shadow, .p3-home-btn.active .p3-home-btn-shadow {
+          opacity: 1;
+          transform: translate(-8px, 6px);
+        }
+        .p3-home-btn:hover .p3-home-btn-bg, .p3-home-btn.active .p3-home-btn-bg {
+          background: #ffffff;
+          border-color: #ffffff;
+        }
 
         .sc-root {
           position: absolute;
@@ -390,7 +470,7 @@ export default function Socials() {
         .sc-char {
           position: absolute;
           top: 0;
-          left: 110px;
+          left: 25%;
           height: 100%;
           width: auto;
           max-width: 160px;
@@ -398,7 +478,6 @@ export default function Socials() {
           object-position: top;
           pointer-events: none;
           z-index: 3;
-          clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
         }
 
         /* right-side nav bar */
@@ -701,7 +780,7 @@ export default function Socials() {
         <div className="sc-right-nav" key={active}>
           <span className="sc-nav-arrow left">◄</span>
           <span className="sc-nav-btn">LB</span>
-          <span className="sc-nav-label">{ITEMS[active].label}</span>
+          <span className="sc-nav-label">{ITEMS[active === -1 ? 0 : active].label}</span>
           <span className="sc-nav-btn">RB</span>
           <span className="sc-nav-arrow right">►</span>
         </div>
@@ -709,30 +788,30 @@ export default function Socials() {
 
       {mounted && (
         <div className="sc-info-panel" key={`panel-${active}`}>
-          {Array.from({ length: ITEMS[active].bars }).map((_, i) => (
+          {Array.from({ length: ITEMS[active === -1 ? 0 : active].bars }).map((_, i) => (
             <div
               className={`sc-info-bar-wrap${activeInfoBar === i ? " selected" : ""}`}
               key={`bar-${active}-${i}`}
               style={{ animationDelay: `${i * 50}ms` }}
               onClick={() => {
                 if (isMobileViewport || activeInfoBar === i) {
-                  openSubLink(ITEMS[active].links[i]);
+                  openSubLink(ITEMS[active === -1 ? 0 : active].links[i]);
                   return;
                 }
                 setActiveInfoBar(i);
               }}
               onMouseEnter={() => setActiveInfoBar(i)}
             >
-              {ITEMS[active].newBars.includes(i) && (
+              {ITEMS[active === -1 ? 0 : active].newBars.includes(i) && (
                 <img className="sc-info-bar-new" src={newsign} alt="" />
               )}
               <div className="sc-info-bar">
-                <img className="sc-info-bar-icon" src={ITEMS[active].barIcon} alt="" />
+                <img className="sc-info-bar-icon" src={ITEMS[active === -1 ? 0 : active].barIcon} alt="" />
                 <span className="sc-info-bar-text">
-                  {ITEMS[active].links[i].length > 24 ? ITEMS[active].links[i].slice(0, 22) + "..." : ITEMS[active].links[i]}
+                  {ITEMS[active === -1 ? 0 : active].links[i].length > 24 ? ITEMS[active === -1 ? 0 : active].links[i].slice(0, 22) + "..." : ITEMS[active === -1 ? 0 : active].links[i]}
                 </span>
                 <span className="sc-info-bar-box">LINK</span>
-                <span className="sc-info-bar-count">{ITEMS[active].counts[i]}</span>
+                <span className="sc-info-bar-count">{ITEMS[active === -1 ? 0 : active].counts[i]}</span>
               </div>
             </div>
           ))}
@@ -752,7 +831,7 @@ export default function Socials() {
         <button
           className="sc-mobile-btn"
           type="button"
-          onClick={() => window.open(ITEMS[active].href, "_blank")}
+          onClick={() => window.open(ITEMS[active === -1 ? 0 : active].href, "_blank")}
         >
           OPEN
         </button>

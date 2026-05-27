@@ -74,33 +74,119 @@ export default function ResumePage({ src }) {
   const location = useLocation();
   const initialActive = location.state?.activeTab !== undefined ? location.state.activeTab : 1;
   const [active, setActive] = useState(initialActive);
+  const [opened, setOpened] = useState(-1);
   const [mounted, setMounted] = useState(false);
+  const [showMask, setShowMask] = useState(true);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
-    return () => clearTimeout(t);
+    const maskTimer = setTimeout(() => setShowMask(false), 1500); // Unmount duplicate video after transition
+    return () => {
+      clearTimeout(t);
+      clearTimeout(maskTimer);
+    };
   }, []);
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "ArrowUp") setActive((i) => Math.max(0, i - 1));
+      if (e.key === "ArrowUp") setActive((i) => Math.max(-1, i - 1));
       if (e.key === "ArrowDown") setActive((i) => Math.min(ITEMS.length - 1, i + 1));
-      if (e.key === "ArrowLeft") navigate(-1);
-      if (e.key === "Escape" || e.key === "Backspace") navigate(-1);
+      if (e.key === "ArrowLeft") navigate("/");
+      if (e.key === "Enter") {
+        if (active === -1) navigate("/");
+        else setOpened(active);
+      }
+      if (e.key === "Escape" || e.key === "Backspace") {
+        if (opened !== -1) setOpened(-1);
+        else navigate("/");
+      }
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigate]);
+  }, [active, opened, navigate]);
 
   return (
     <div id="menu-screen">
-      <video src={src} autoPlay loop muted playsInline />
-      <div className="resume-entry-mask" aria-hidden="true">
-        <video className="resume-entry-video" src={src} autoPlay loop muted playsInline />
-      </div>
+      <video src={src} autoPlay loop muted playsInline style={{ pointerEvents: 'none', willChange: 'transform', transform: 'translateZ(0)' }} />
+      {showMask && (
+        <div className="resume-entry-mask" aria-hidden="true">
+          <video className="resume-entry-video" src={src} autoPlay loop muted playsInline style={{ pointerEvents: 'none', willChange: 'transform', transform: 'translateZ(0)' }} />
+        </div>
+      )}
+      <a
+        href="#"
+        className={`p3-home-btn${active === -1 ? " active" : ""}`}
+        onClick={(e) => { e.preventDefault(); navigate("/"); }}
+        onMouseEnter={() => {
+          setActive(-1);
+          setOpened(-1);
+        }}
+      >
+        <div className="p3-home-btn-shadow" />
+        <div className="p3-home-btn-bg" />
+        <span className="p3-home-btn-text">◄ MENU</span>
+      </a>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&display=swap');
+
+        .p3-home-btn {
+          position: absolute;
+          top: 20px;
+          left: 24px;
+          z-index: 100;
+          cursor: pointer;
+          pointer-events: all;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 20px;
+          font-style: italic;
+          letter-spacing: 2px;
+          padding: 8px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: #3ce2ff;
+          transition: transform 0.2s ease, color 0.12s ease;
+          transform: skewX(-15deg);
+        }
+        .p3-home-btn-shadow {
+          position: absolute;
+          inset: 0;
+          background: rgba(235, 80, 120, 0.85);
+          z-index: 1;
+          transform: translate(-4px, 4px);
+          transition: transform 0.2s ease, opacity 0.2s ease;
+          opacity: 0;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+        .p3-home-btn-bg {
+          position: absolute;
+          inset: 0;
+          background: #111;
+          z-index: 2;
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .p3-home-btn-text {
+          position: relative;
+          z-index: 3;
+          white-space: nowrap;
+          user-select: none;
+        }
+        .p3-home-btn:hover, .p3-home-btn.active {
+          color: #6b0010;
+          transform: skewX(-15deg) scale(1.05);
+        }
+        .p3-home-btn:hover .p3-home-btn-shadow, .p3-home-btn.active .p3-home-btn-shadow {
+          opacity: 1;
+          transform: translate(-8px, 6px);
+        }
+        .p3-home-btn:hover .p3-home-btn-bg, .p3-home-btn.active .p3-home-btn-bg {
+          background: #ffffff;
+          border-color: #ffffff;
+        }
 
         .resume-entry-mask {
           position: absolute;
@@ -137,7 +223,7 @@ export default function ResumePage({ src }) {
           position: absolute;
           top: 9vh;
           left: 2.8vw;
-          width: min(47vw, 720px);
+          width: min(33vw, 500px);
           display: flex;
           flex-direction: column;
           gap: 10px;
@@ -306,11 +392,11 @@ export default function ResumePage({ src }) {
           min-height: 67vh;
           z-index: 12;
           padding: 20px 22px;
-          background: linear-gradient(180deg, rgba(15, 28, 105, 0.96) 0%, rgba(8, 16, 68, 0.97) 100%);
+          background: linear-gradient(180deg, rgba(80, 50, 0, 0.96) 0%, rgba(40, 25, 0, 0.97) 100%);
           clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
           box-shadow:
-            inset 0 0 0 1px rgba(133, 244, 255, 0.16),
-            16px 16px 0 rgba(0, 6, 30, 0.55);
+            inset 0 0 0 1px rgba(255, 165, 0, 0.4),
+            16px 16px 0 rgba(20, 10, 0, 0.55);
           overflow: hidden;
         }
         .resume-detail-panel::before {
@@ -318,7 +404,7 @@ export default function ResumePage({ src }) {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(135deg, rgba(133, 244, 255, 0.08) 0 15%, transparent 15% 100%),
+            linear-gradient(135deg, rgba(255, 165, 0, 0.15) 0 15%, transparent 15% 100%),
             linear-gradient(180deg, rgba(255,255,255,0.05), transparent 24%);
           pointer-events: none;
         }
@@ -330,10 +416,10 @@ export default function ResumePage({ src }) {
           gap: 14px;
           min-height: 92px;
           padding: 0 18px;
-          background: linear-gradient(90deg, #8ef5ff 0%, #d3fdff 100%);
+          background: linear-gradient(90deg, #FFA500 0%, #FFC04D 100%);
           clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
-          color: #08153f;
-          box-shadow: 10px 0 0 rgba(255, 94, 136, 0.88);
+          color: #261800;
+          box-shadow: 10px 0 0 rgba(200, 80, 0, 0.88);
         }
         .resume-detail-top-index {
           font-family: 'Anton', sans-serif;
@@ -366,34 +452,34 @@ export default function ResumePage({ src }) {
           gap: 14px;
           min-height: 56px;
           padding: 0 14px;
-          background: rgba(8, 18, 72, 0.96);
+          background: rgba(90, 55, 0, 0.96);
           clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
-          box-shadow: inset 0 0 0 1px rgba(140, 239, 255, 0.12);
+          box-shadow: inset 0 0 0 1px rgba(255, 165, 0, 0.3);
           transition: transform 0.16s ease, background 0.16s ease;
         }
         .resume-detail-row:hover {
           transform: translateX(4px);
-          background: rgba(12, 26, 94, 1);
+          background: rgba(120, 75, 0, 1);
         }
         .resume-detail-row-index {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 26px;
           letter-spacing: 1px;
-          color: #94f4ff;
+          color: #FFC04D;
         }
         .resume-detail-row-title {
           font-family: 'Anton', sans-serif;
           font-size: 28px;
           line-height: 1;
-          color: #f2fcff;
+          color: #FFF3E0;
         }
         .resume-detail-status {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 22px;
           line-height: 1;
           letter-spacing: 1.1px;
-          color: #06133b;
-          background: #8df6ff;
+          color: #261800;
+          background: #FFA500;
           padding: 7px 12px;
           clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
         }
@@ -401,15 +487,15 @@ export default function ResumePage({ src }) {
           position: relative;
           margin-top: 22px;
           padding: 18px;
-          background: rgba(5, 13, 57, 0.97);
+          background: rgba(50, 32, 0, 0.97);
           clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
-          box-shadow: inset 0 0 0 1px rgba(145, 239, 255, 0.12);
+          box-shadow: inset 0 0 0 1px rgba(255, 165, 0, 0.3);
         }
         .resume-detail-bottom-title {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 30px;
           letter-spacing: 2px;
-          color: #91f5ff;
+          color: #FFA500;
           margin-bottom: 14px;
         }
         .resume-detail-bullets {
@@ -421,7 +507,7 @@ export default function ResumePage({ src }) {
           font-family: 'Anton', sans-serif;
           font-size: 21px;
           line-height: 1.15;
-          color: #edfaff;
+          color: #FFE6CC;
         }
 
         .resume-mobile-controls {
@@ -470,6 +556,7 @@ export default function ResumePage({ src }) {
               }}
               onClick={() => {
                 setActive(index);
+                setOpened(index);
               }}
             >
               <div className="resume-card">
@@ -491,34 +578,40 @@ export default function ResumePage({ src }) {
           ))}
         </div>
 
-        {DETAIL_PANELS[active] && (
-          <div className="resume-detail-panel" key={active}>
-            <div className="resume-detail-top">
-              <div className="resume-detail-top-index">0{active + 1}</div>
-              <div className="resume-detail-top-title">{DETAIL_PANELS[active].title}</div>
-              <div className="resume-detail-top-progress">{DETAIL_PANELS[active].progress}</div>
-            </div>
+        {(() => {
+          if (opened === -1) return null;
+          const currentIndex = active === -1 ? opened : active;
+          const panel = DETAIL_PANELS[currentIndex];
+          if (!panel) return null;
+          return (
+            <div className="resume-detail-panel">
+              <div className="resume-detail-top">
+                <div className="resume-detail-top-index">0{currentIndex + 1}</div>
+                <div className="resume-detail-top-title">{panel.title}</div>
+                <div className="resume-detail-top-progress">{panel.progress}</div>
+              </div>
 
-            <div className="resume-detail-list">
-              {DETAIL_PANELS[active].rows.map((row) => (
-                <div className="resume-detail-row" key={row.index}>
-                  <div className="resume-detail-row-index">{row.index}</div>
-                  <div className="resume-detail-row-title">{row.title}</div>
-                  <div className="resume-detail-status">{row.status}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="resume-detail-bottom">
-              <div className="resume-detail-bottom-title">DETAILS</div>
-              <div className="resume-detail-bullets">
-                {DETAIL_PANELS[active].bullets.map((bullet, idx) => (
-                  <div className="resume-detail-bullet" key={idx}>{bullet}</div>
+              <div className="resume-detail-list">
+                {panel.rows.map((row) => (
+                  <div className="resume-detail-row" key={row.index}>
+                    <div className="resume-detail-row-index">{row.index}</div>
+                    <div className="resume-detail-row-title">{row.title}</div>
+                    <div className="resume-detail-status">{row.status}</div>
+                  </div>
                 ))}
               </div>
+
+              <div className="resume-detail-bottom">
+                <div className="resume-detail-bottom-title">DETAILS</div>
+                <div className="resume-detail-bullets">
+                  {panel.bullets.map((bullet, idx) => (
+                    <div className="resume-detail-bullet" key={idx}>{bullet}</div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
       </div>
 
