@@ -84,11 +84,6 @@ export default function AboutMe() {
     typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
 
   const handleBarClick = (index) => {
-    if (active === index) {
-      setRevealed((prev) => !prev);
-      return;
-    }
-
     setActive(index);
     setRevealed(true);
   };
@@ -117,7 +112,7 @@ export default function AboutMe() {
   return (
     <div id="menu-screen">
       <video src={bgVideo} autoPlay loop muted playsInline />
-      {revealed && <div key={`dim-${active}`} className="sc-dim" />}
+      {revealed && <div key={`dim-${active}`} className="sc-dim" onClick={() => setRevealed(false)} />}
       {revealed && (
         <div key={`panel-${active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`}>
           <div className="sc-reveal-upper-bar">
@@ -126,6 +121,7 @@ export default function AboutMe() {
             ))}
           </div>
           <div className="sc-reveal-lower-bar">{REVEAL_CONTENT[active].lower}</div>
+          <button className="sc-close-btn" type="button" onClick={() => setRevealed(false)}>BACK</button>
         </div>
       )}
       {revealed && (
@@ -167,7 +163,8 @@ export default function AboutMe() {
           inset: 0;
           z-index: 12;
           background: rgba(40, 45, 54, 0.68);
-          pointer-events: none;
+          pointer-events: all; /* Clickable background */
+          cursor: pointer;
           animation: sc-dim-in 0.32s ease-out;
         }
 
@@ -249,7 +246,7 @@ export default function AboutMe() {
           width: 88vw;
           height: 60vh;
           z-index: 12;
-          pointer-events: none;
+          pointer-events: all; /* Enable mouse clicks inside the panel */
           background:
             linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(243,246,252,0.98) 100%);
           clip-path: polygon(0 0, 100% 0, calc(100% - 88px) 100%, 0 100%);
@@ -261,6 +258,27 @@ export default function AboutMe() {
           transform: translateX(-40px) rotate(-20deg);
           transform-origin: left bottom;
           transition: opacity 0.3s ease, transform 0.35s ease;
+        }
+        .sc-close-btn {
+          position: absolute;
+          bottom: 16px;
+          right: 28px;
+          background: #c4001a;
+          color: #fff;
+          border: none;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 16px;
+          letter-spacing: 1.5px;
+          padding: 5px 16px;
+          cursor: pointer;
+          clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+          transition: background 0.2s ease, transform 0.2s ease;
+          pointer-events: all;
+          z-index: 20;
+        }
+        .sc-close-btn:hover {
+          background: #ff2a2a;
+          transform: scale(1.05);
         }
         .sc-reveal-panel.mounted {
           opacity: 0.92;
@@ -477,6 +495,7 @@ export default function AboutMe() {
           align-items: center;
           justify-content: space-between;
           padding: 0 20px 0 20px;
+          pointer-events: none;
         }
 
         /* left: role label */
@@ -769,15 +788,17 @@ export default function AboutMe() {
           <div
             key={item.id}
             className={`sc-bar-outer${active === i ? " active" : ""}${mounted ? " mounted" : ""}`}
-            onClick={() => {
-              handleBarClick(i);
-            }}
-            onMouseEnter={() => {
-              setActive(i);
-            }}
           >
             <div className="sc-bar-red" />
-            <div className="sc-bar">
+            <div
+              className="sc-bar"
+              onClick={() => {
+                handleBarClick(i);
+              }}
+              onMouseEnter={() => {
+                setActive(i);
+              }}
+            >
               <img className="sc-char" src={CHARS[i]} alt="" />
               <div className="sc-bar-fill" />
               <div className="sc-bar-shade" />

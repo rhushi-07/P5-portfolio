@@ -10,10 +10,11 @@ import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
 
 
-const CHARS = [char1, char2, char3];
+const CHARS = [char1, char2, char3, char1];
 
 const ROLES = [
   { text: "LEADER", color: "#e8c100", bg: "rgba(232,193,0,0.12)", border: "rgba(232,193,0,0.5)" },
+  { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
   { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
   { text: "PARTY",  color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
 ];
@@ -49,6 +50,22 @@ const ITEMS = [
     stats: [
       { tag: "REP", value: "15", color: "#ffffff" },
       { tag: "STR", value: "05", color: "#f9c63b" },
+    ],
+  },
+  {
+    id: "youtube",
+    label: "YOUTUBE",
+    handle: "@PyreStudios",
+    href: "https://www.youtube.com/@PyreStudios",
+    icon: "📺",
+    barIcon: icon1,
+    bars: 2,
+    newBars: [0],
+    counts: ["Pyre Studios", "Game Dev & VFX"],
+    links: ["youtube.com/@PyreStudios", "youtube.com/@PyreStudios"],
+    stats: [
+      { tag: "SUB", value: "ACTIVE", color: "#ff0000" },
+      { tag: "CHL", value: "PYRE", color: "#ffa500" },
     ],
   },
   {
@@ -160,6 +177,7 @@ export default function Socials() {
         .sc-bar-outer:nth-child(1) { transition-delay: 0ms; }
         .sc-bar-outer:nth-child(2) { transition-delay: 80ms; }
         .sc-bar-outer:nth-child(3) { transition-delay: 160ms; }
+        .sc-bar-outer:nth-child(4) { transition-delay: 240ms; }
 
         /* red underlay — peeks out below the bar when active */
         .sc-bar-red {

@@ -302,10 +302,10 @@ export default function ResumePage({ src }) {
           position: absolute;
           top: 9.5vh;
           right: 4.5vw;
-          width: min(39vw, 620px);
-          min-height: 74vh;
+          width: min(35vw, 558px);
+          min-height: 67vh;
           z-index: 12;
-          padding: 22px 24px 24px 24px;
+          padding: 20px 22px;
           background: linear-gradient(180deg, rgba(15, 28, 105, 0.96) 0%, rgba(8, 16, 68, 0.97) 100%);
           clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
           box-shadow:
@@ -515,12 +515,6 @@ export default function ResumePage({ src }) {
                 {DETAIL_PANELS[active].bullets.map((bullet, idx) => (
                   <div className="resume-detail-bullet" key={idx}>{bullet}</div>
                 ))}
-              </div>
-              <div className="resume-detail-bottom-title" style={{ marginTop: "16px", fontSize: "18px", borderTop: "1px dashed rgba(145,239,255,0.2)", paddingTop: "8px" }}>
-                DECLARATION
-              </div>
-              <div className="resume-detail-bullet" style={{ fontSize: "14px", fontStyle: "italic", opacity: 0.8, color: "#9ffbff", paddingLeft: "4px" }}>
-                "I hereby declare that the information provided is true and correct to the best of my knowledge and belief."
               </div>
             </div>
           </div>
