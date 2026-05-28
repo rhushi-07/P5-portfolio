@@ -144,13 +144,14 @@ export default function PageTransition({ children, variant = "default" }) {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div key={location.pathname} style={{ position: "relative" }}>
+      <motion.div key={location.pathname} style={{ position: "relative", width: "100%", height: "100%" }}>
         <TransitionOverlay variant={variant} />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2, delay: 0.18 }}
+          style={{ width: "100%", height: "100%" }}
         >
           {children}
         </motion.div>

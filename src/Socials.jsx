@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useMobileScale } from "./contexts/MobileScaleContext";
 import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char1.png";
 import char4 from "./assets/char4.png";
@@ -24,14 +25,14 @@ const ITEMS = [
   {
     id: "linkedin",
     label: "LINKEDIN",
-    handle: "@rhushikesh",
-    href: "https://www.linkedin.com/in/rhushikesh",
+    handle: "@rhushikesh-gulave-689b61288",
+    href: "https://www.linkedin.com/in/rhushikesh-gulave-689b61288",
     icon: "",
     barIcon: icon1,
     bars: 1,
     newBars: [0],
     counts: ["100% Active"],
-    links: ["linkedin.com/in/rhushikesh"],
+    links: ["https://www.linkedin.com/in/rhushikesh-gulave-689b61288"],
     stats: [
       { tag: "CON", value: "500+", color: "#0077b5" },
       { tag: "ACT", value: "HIGH", color: "#3ce2ff" },
@@ -87,7 +88,8 @@ const ITEMS = [
   },
 ];
 
-export default function Socials() {
+export default function Socials({ src }) {
+  useMobileScale(0.5); // <-- You can change this scale value for this specific page!
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [activeInfoBar, setActiveInfoBar] = useState(0);

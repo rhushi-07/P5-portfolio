@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useMobileScale } from "./contexts/MobileScaleContext";
 
 const ITEMS = [
   { id: "about", label: "ABOUT ME", page: "about", fontSize: 80, offsetX: 0, offsetY: 0, skew: -6, skewY: 10 },
@@ -17,6 +18,7 @@ const CLIP_SHAPES = [
 ];
 
 export default function P3Menu({ onNavigate }) {
+  useMobileScale(0.5);
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [animKey, setAnimKey] = useState(0);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useMobileScale } from "./contexts/MobileScaleContext";
 
 const ITEMS = [
   { id: "i", badge: "I", title: "EDUCATION", subtitle: "B.E. Computer Engineering", rank: 3 },
@@ -70,6 +71,7 @@ const DETAIL_PANELS = [
 ];
 
 export default function ResumePage({ src }) {
+  useMobileScale(0.4);
   const navigate = useNavigate();
   const location = useLocation();
   const initialActive = location.state?.activeTab !== undefined ? location.state.activeTab : 1;

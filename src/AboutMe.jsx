@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useMobileScale } from "./contexts/MobileScaleContext";
+import { useMobileLandscapeDetection } from "./App";
 import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char4.png";
 import char2 from "./assets/char2.png";
@@ -75,8 +77,13 @@ const ITEMS = [
 ];
 
 export default function AboutMe() {
+  useMobileScale(.6); // <-- Increased scale for About Me
+  
+  const { isMobile } = useMobileLandscapeDetection();
+  const popupScale = isMobile ? 1 : 1; // <-- Change this value to increase/decrease mobile popup size!
+
   const [active, setActive] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false)
   const [revealed, setRevealed] = useState(false);
   const navigate = useNavigate();
 
@@ -131,17 +138,35 @@ export default function AboutMe() {
         <span className="p3-home-btn-text">◄ MENU</span>
       </a>
       {revealed && <div key={`dim-${active}`} className="sc-dim" onClick={() => setRevealed(false)} />}
+      
+      {/* Pop-up Container with Dynamic Scale */}
       {revealed && (
-        <div key={`panel-${active === -1 ? 0 : active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`}>
-          <div className="sc-reveal-upper-bar">
-            {REVEAL_CONTENT[active === -1 ? 0 : active].upper.map((line) => (
-              <div className="sc-reveal-upper-line" key={line}>{line}</div>
-            ))}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 13, pointerEvents: 'none',
+          transform: `scale(${popupScale})`, transformOrigin: 'center center', transition: 'transform 0.3s ease'
+        }}>
+          {/* Text Panel */}
+          <div key={`panel-${active === -1 ? 0 : active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`} style={{ pointerEvents: 'auto' }}>
+            <div className="sc-reveal-upper-bar">
+              {REVEAL_CONTENT[active === -1 ? 0 : active].upper.map((line) => (
+                <div className="sc-reveal-upper-line" key={line}>{line}</div>
+              ))}
+            </div>
+            <div className="sc-reveal-lower-bar">{REVEAL_CONTENT[active === -1 ? 0 : active].lower}</div>
+            <button className="sc-close-btn" type="button" onClick={() => setRevealed(false)}>BACK</button>
           </div>
-          <div className="sc-reveal-lower-bar">{REVEAL_CONTENT[active === -1 ? 0 : active].lower}</div>
-          <button className="sc-close-btn" type="button" onClick={() => setRevealed(false)}>BACK</button>
+
+          {/* Character Image */}
+          <div key={`portrait-${active === -1 ? 0 : active}`} className={`sc-main-portrait-shell${mounted ? " mounted" : ""}`}>
+            <img
+              className="sc-main-portrait"
+              src={MAIN_IMAGES[active === -1 ? 0 : active]}
+              alt=""
+            />
+          </div>
         </div>
       )}
+
       {revealed && (
         <div key={`nav-${active === -1 ? 0 : active}`} className="sc-right-nav">
           <span className="sc-nav-arrow left">◄</span>
@@ -149,15 +174,6 @@ export default function AboutMe() {
           <span className="sc-nav-dot" />
           <span className="sc-nav-btn">RB</span>
           <span className="sc-nav-arrow right">►</span>
-        </div>
-      )}
-      {revealed && (
-        <div key={`portrait-${active === -1 ? 0 : active}`} className={`sc-main-portrait-shell${mounted ? " mounted" : ""}`}>
-          <img
-            className="sc-main-portrait"
-            src={MAIN_IMAGES[active === -1 ? 0 : active]}
-            alt=""
-          />
         </div>
       )}
       <style>{`
@@ -299,11 +315,11 @@ export default function AboutMe() {
         .sc-main-portrait-shell {
           position: absolute;
           top: 0;
-          right: -3vw;
+          right: -3%;
           z-index: 13;
           pointer-events: none;
-          width: 43vw;
-          height: 100vh;
+          width: 43%;
+          height: 100%;
           overflow: hidden;
           opacity: 0;
           transform: translateX(24px) skewX(-8deg) scale(0.98);
@@ -317,10 +333,10 @@ export default function AboutMe() {
 
         .sc-reveal-panel {
           position: absolute;
-          top: 44vh;
-          left: -6vw;
-          width: 88vw;
-          height: 60vh;
+          top: 44%;
+          left: -6%;
+          width: 88%;
+          height: 60%;
           z-index: 12;
           pointer-events: all; /* Enable mouse clicks inside the panel */
           background:
