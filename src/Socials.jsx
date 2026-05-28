@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMobileScale } from "./contexts/MobileScaleContext";
+import { useMobileLandscapeDetection } from "./App";
 import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char1.png";
 import char4 from "./assets/char4.png";
@@ -89,7 +90,10 @@ const ITEMS = [
 ];
 
 export default function Socials({ src }) {
-  useMobileScale(0.5); // <-- You can change this scale value for this specific page!
+  useMobileScale(0.65); // <-- Scale Socials appropriately
+
+  const { isMobile } = useMobileLandscapeDetection();
+  
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [activeInfoBar, setActiveInfoBar] = useState(0);
@@ -148,16 +152,18 @@ export default function Socials({ src }) {
   return (
     <div id="menu-screen">
       <video src={bgVideo} autoPlay loop muted playsInline />
-      <a
-        href="#"
-        className={`p3-home-btn${active === -1 ? " active" : ""}`}
-        onClick={(e) => { e.preventDefault(); navigate("/"); }}
-        onMouseEnter={() => setActive(-1)}
-      >
-        <div className="p3-home-btn-shadow" />
-        <div className="p3-home-btn-bg" />
-        <span className="p3-home-btn-text">◄ MENU</span>
-      </a>
+      {!isMobile && (
+        <a
+          href="#"
+          className={`p3-home-btn${active === -1 ? " active" : ""}`}
+          onClick={(e) => { e.preventDefault(); navigate("/"); }}
+          onMouseEnter={() => setActive(-1)}
+        >
+          <div className="p3-home-btn-shadow" />
+          <div className="p3-home-btn-bg" />
+          <span className="p3-home-btn-text">◄ MENU</span>
+        </a>
+      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&display=swap');
 

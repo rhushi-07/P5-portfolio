@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMobileScale } from "./contexts/MobileScaleContext";
+import { useMobileLandscapeDetection } from "./App";
 
 const ITEMS = [
   { id: "i", badge: "I", title: "EDUCATION", subtitle: "B.E. Computer Engineering", rank: 3 },
@@ -72,6 +73,7 @@ const DETAIL_PANELS = [
 
 export default function ResumePage({ src }) {
   useMobileScale(0.4);
+  const { isMobile } = useMobileLandscapeDetection();
   const navigate = useNavigate();
   const location = useLocation();
   const initialActive = location.state?.activeTab !== undefined ? location.state.activeTab : 1;
@@ -116,19 +118,21 @@ export default function ResumePage({ src }) {
           <video className="resume-entry-video" src={src} autoPlay loop muted playsInline style={{ pointerEvents: 'none', willChange: 'transform', transform: 'translateZ(0)' }} />
         </div>
       )}
-      <a
-        href="#"
-        className={`p3-home-btn${active === -1 ? " active" : ""}`}
-        onClick={(e) => { e.preventDefault(); navigate("/"); }}
-        onMouseEnter={() => {
-          setActive(-1);
-          setOpened(-1);
-        }}
-      >
-        <div className="p3-home-btn-shadow" />
-        <div className="p3-home-btn-bg" />
-        <span className="p3-home-btn-text">◄ MENU</span>
-      </a>
+      {!isMobile && (
+        <a
+          href="#"
+          className={`p3-home-btn${active === -1 ? " active" : ""}`}
+          onClick={(e) => { e.preventDefault(); navigate("/"); }}
+          onMouseEnter={() => {
+            setActive(-1);
+            setOpened(-1);
+          }}
+        >
+          <div className="p3-home-btn-shadow" />
+          <div className="p3-home-btn-bg" />
+          <span className="p3-home-btn-text">◄ MENU</span>
+        </a>
+      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&display=swap');
 

@@ -65,9 +65,9 @@ function AboutTransition() {
 
 function SocialsTransition() {
   const stripes = [
-    { color: "#00184c", left: "72vw", width: "24vw", delay: 0 },
-    { color: "#00dff7", left: "80vw", width: "14vw", delay: 0.06 },
-    { color: "#ffffff", left: "88vw", width: "8vw", delay: 0.12 },
+    { color: "#00184c", left: "-10vw", width: "45vw", delay: 0 },
+    { color: "#00dff7", left: "25vw", width: "45vw", delay: 0.05 },
+    { color: "#ffffff", left: "65vw", width: "45vw", delay: 0.1 },
   ];
 
   return stripes.map((stripe, i) => (
@@ -75,18 +75,17 @@ function SocialsTransition() {
       key={i}
       style={{
         position: "fixed",
-        top: "-6vh",
+        top: "-10vh",
         left: stripe.left,
         width: stripe.width,
-        height: "112vh",
+        height: "120vh",
         background: stripe.color,
         zIndex: 999 - i,
-        transform: "skewX(-16deg)",
-        transformOrigin: "top",
+        transform: "skewX(-12deg)",
         pointerEvents: "none",
       }}
-      initial={{ y: -1200, opacity: 1 }}
-      animate={{ y: [-1200, 0, 0, 1200] }}
+      initial={{ y: "-100vh", opacity: 1 }}
+      animate={{ y: ["-100vh", "0vh", "0vh", "100vh"] }}
       transition={{
         duration: 0.56,
         delay: stripe.delay,

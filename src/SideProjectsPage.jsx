@@ -94,11 +94,11 @@ const ITEMS = [
   },
 ];
 
-export default function SideProjectsPage() {
+export default function SideProjectsPage({ src }) {
   useMobileScale(0.6); // <-- Increased scale for Side Projects
-  
+
   const { isMobile } = useMobileLandscapeDetection();
-  const popupScale = isMobile ? 1.25 : 1; // <-- Change this value to increase/decrease mobile popup size!
+  const popupScale = isMobile ? 1 : 1; // <-- Change this value to increase/decrease mobile popup size!
 
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -145,18 +145,20 @@ export default function SideProjectsPage() {
   return (
     <div id="menu-screen">
       <video src={src} autoPlay loop muted playsInline />
-      <a
-        href="#"
-        className={`p3-home-btn${active === -1 ? " active" : ""}`}
-        onClick={(e) => { e.preventDefault(); navigate("/"); }}
-        onMouseEnter={() => setActive(-1)}
-      >
-        <div className="p3-home-btn-shadow" />
-        <div className="p3-home-btn-bg" />
-        <span className="p3-home-btn-text">◄ MENU</span>
-      </a>
+      {!isMobile && (
+        <a
+          href="#"
+          className={`p3-home-btn${active === -1 ? " active" : ""}`}
+          onClick={(e) => { e.preventDefault(); navigate("/"); }}
+          onMouseEnter={() => setActive(-1)}
+        >
+          <div className="p3-home-btn-shadow" />
+          <div className="p3-home-btn-bg" />
+          <span className="p3-home-btn-text">◄ MENU</span>
+        </a>
+      )}
       {revealed && <div key={`dim-${active}`} className="sc-dim" onClick={() => setRevealed(false)} />}
-      
+
       {/* Pop-up Container with Dynamic Scale */}
       {revealed && (
         <div style={{
@@ -776,81 +778,8 @@ export default function SideProjectsPage() {
         }
 
         @media (max-width: 768px) {
-          .sc-main-portrait-shell {
-            top: 8vh;
-            left: -9vw; /* Mirrored left align */
-            width: 46vw;
-            height: 44vh;
-            z-index: 13;
-          }
-
-          .sc-main-portrait {
-            transform: none;
-            object-position: center top;
-          }
-
-          .sc-reveal-panel {
-            top: 44vh !important;
-            left: 4vw !important;
-            right: 6vw !important;
-            width: auto !important;
-            height: 50vh !important;
-            z-index: 14;
-            transform: translateX(0) rotate(0deg) !important;
-            clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
-            box-shadow:
-              0 0 0 2px rgba(255,255,255,0.24),
-              10px 0 0 rgba(215, 13, 44, 0.9),
-              16px 0 0 rgba(255,255,255,0.24);
-          }
-
-          .sc-reveal-panel.mounted {
-            transform: translateX(0) rotate(0deg) !important;
-          }
-
-          .sc-reveal-panel::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 18px;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(224,61,49,0.95) 0%, rgba(168,22,43,0.92) 100%);
-            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
-            opacity: 0.95;
-            pointer-events: none;
-          }
-
-          .sc-reveal-upper-bar {
-            top: 10%;
-            height: 46%;
-            width: 96%;
-            left: 2%;
-            padding: 0 10px;
-          }
-
-          .sc-reveal-upper-line {
-            font-size: 14px;
-            line-height: 1.1;
-            padding: 0 10px;
-          }
-
-          .sc-reveal-lower-bar {
-            top: 62%;
-            left: 6%;
-            width: 88%;
-            bottom: 8%;
-            height: auto;
-            max-height: none;
-            font-size: 15px;
-            line-height: 1.2;
-            padding: 8px 12px 8px 12px;
-          }
-
-          .sc-right-nav {
-            top: 2vh;
-            right: 4vw; /* Mirrored layout */
-            transform: translateX(0) rotate(12deg);
+          .sc-root {
+            padding-top: 12%; /* Slightly more for SideProjects since it has 4 bars */
           }
 
           .sc-mobile-controls {

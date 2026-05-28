@@ -48,7 +48,7 @@ function AnimatedRoutes() {
           <PageTransition><ResumePage src={main2} /></PageTransition>
         } />
         <Route path="/socials" element={
-          <PageTransition variant="socials"><Socials /></PageTransition>
+          <PageTransition><Socials /></PageTransition>
         } />
         <Route path="/sideproj" element={
           <PageTransition><SideProjectsPage src={main4} /></PageTransition>
