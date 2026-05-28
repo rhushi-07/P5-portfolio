@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMobileScale } from "./contexts/MobileScaleContext";
-import { useMobileLandscapeDetection } from "./App";
+import { useMobileLandscapeDetection } from "./contexts/MobileScaleContext";
 import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char4.png";
 import char2 from "./assets/char2.png";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMobileScale } from "./contexts/MobileScaleContext";
-import { useMobileLandscapeDetection } from "./App";
+import { useMobileLandscapeDetection } from "./contexts/MobileScaleContext";
 
 const ITEMS = [
   { id: "i", badge: "I", title: "EDUCATION", subtitle: "B.E. Computer Engineering", rank: 3 },
